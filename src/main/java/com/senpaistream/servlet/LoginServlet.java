@@ -78,6 +78,8 @@ public class LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 jsonResponse.addProperty("success", true);
                 jsonResponse.addProperty("message", "Login successful! (Demo Mode)");
+                jsonResponse.addProperty("username", username);
+                jsonResponse.addProperty("email", email);
                 jsonResponse.addProperty("redirect", "index.html");
                 jsonResponse.addProperty("demoMode", true);
                 out.print(jsonResponse.toString());
@@ -99,6 +101,8 @@ public class LoginServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
             jsonResponse.addProperty("success", true);
             jsonResponse.addProperty("message", "Login successful! (Demo Mode)");
+            jsonResponse.addProperty("username", username);
+            jsonResponse.addProperty("email", email);
             jsonResponse.addProperty("redirect", "index.html");
             jsonResponse.addProperty("demoMode", true);
             out.print(jsonResponse.toString());
@@ -115,6 +119,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("user", user);
                 session.setAttribute("userId", user.getUserId());
                 session.setAttribute("username", user.getUsername());
+                session.setAttribute("email", user.getEmail());
                 
                 // Set session timeout (30 minutes)
                 session.setMaxInactiveInterval(30 * 60);
@@ -129,7 +134,10 @@ public class LoginServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 jsonResponse.addProperty("success", true);
                 jsonResponse.addProperty("message", "Login successful!");
+                jsonResponse.addProperty("username", user.getUsername());
+                jsonResponse.addProperty("email", user.getEmail());
                 jsonResponse.addProperty("redirect", "index.html");
+                jsonResponse.addProperty("demoMode", false);
                 out.print(jsonResponse.toString());
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

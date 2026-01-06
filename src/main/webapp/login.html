@@ -154,7 +154,20 @@
                 const data = JSON.parse(text);
                 
                 if (data.success) {
-                    showAlert('Login successful! Redirecting...', 'success');
+                    // Store user info in localStorage
+                    const username = data.username || email.split('@')[0];
+                    localStorage.setItem('demoUser', JSON.stringify({
+                        email: data.email || email,
+                        username: username,
+                        loggedIn: true,
+                        demoMode: data.demoMode || false
+                    }));
+                    
+                    if (remember) {
+                        localStorage.setItem('rememberedEmail', email);
+                    }
+                    
+                    showAlert(data.message || 'Login successful! Redirecting...', 'success');
                     setTimeout(() => {
                         window.location.href = data.redirect || 'index.html';
                     }, 500);
