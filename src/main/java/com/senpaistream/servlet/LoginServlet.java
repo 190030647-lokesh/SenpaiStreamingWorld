@@ -61,11 +61,33 @@ public class LoginServlet extends HttpServlet {
         }
         
         // Check database connection
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            // Demo mode - allow any login
-            System.out.println("Demo mode: Login for " + email);
-            String username = email.split("@")[0]; // Get username from email
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                // Demo mode - allow any login
+                System.out.println("Demo mode: Login for " + email);
+                String username = email.split("@")[0]; // Get username from email
+                
+                HttpSession session = request.getSession();
+                session.setAttribute("userId", 1);
+                session.setAttribute("username", username);
+                session.setAttribute("email", email);
+                session.setAttribute("demoMode", true);
+                session.setMaxInactiveInterval(30 * 60);
+                
+                response.setStatus(HttpServletResponse.SC_OK);
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("message", "Login successful! (Demo Mode)");
+                jsonResponse.addProperty("redirect", "index.html");
+                jsonResponse.addProperty("demoMode", true);
+                out.print(jsonResponse.toString());
+                out.flush();
+                return;
+            }
+        } catch (Exception dbError) {
+            // Database connection failed - use demo mode
+            System.err.println("Database connection error, using demo mode: " + dbError.getMessage());
+            String username = email.split("@")[0];
             
             HttpSession session = request.getSession();
             session.setAttribute("userId", 1);

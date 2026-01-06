@@ -92,10 +92,27 @@ public class RegisterServlet extends HttpServlet {
         }
         
         // Check database connection first
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) {
-            // Demo mode - allow registration without database
-            System.out.println("Demo mode: Registration for " + username);
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            if (conn == null) {
+                // Demo mode - allow registration without database
+                System.out.println("Demo mode: Registration for " + username);
+                HttpSession session = request.getSession();
+                session.setAttribute("username", username);
+                session.setAttribute("email", email);
+                session.setAttribute("demoMode", true);
+                
+                response.setStatus(HttpServletResponse.SC_OK);
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("message", "Registration successful! (Demo Mode) Please login.");
+                jsonResponse.addProperty("demoMode", true);
+                out.print(jsonResponse.toString());
+                out.flush();
+                return;
+            }
+        } catch (Exception dbError) {
+            // Database connection failed - use demo mode
+            System.err.println("Database connection error, using demo mode: " + dbError.getMessage());
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
             session.setAttribute("email", email);
@@ -103,7 +120,7 @@ public class RegisterServlet extends HttpServlet {
             
             response.setStatus(HttpServletResponse.SC_OK);
             jsonResponse.addProperty("success", true);
-            jsonResponse.addProperty("message", "Registration successful! (Demo Mode) Please login.");
+            jsonResponse.addProperty("message", "Registration successful! (Demo Mode)");
             jsonResponse.addProperty("demoMode", true);
             out.print(jsonResponse.toString());
             out.flush();
