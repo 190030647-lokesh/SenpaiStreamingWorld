@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:50px; margin-right:15px;">
+                    <circle cx="100" cy="100" r="95" fill="#1a1a2e" stroke="#ff6b6b" stroke-width="3"/>
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+                        <animate attributeName="r" values="75;85;75" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="100" cy="100" r="65" fill="none" stroke="#ff6b6b" stroke-width="1.5" opacity="0.8"/>
+                    <g transform="translate(100, 100)">
+                        <line x1="-5" y1="-45" x2="5" y2="45" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="-3" y1="-40" x2="3" y2="40" stroke="#ff9999" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                        <ellipse cx="0" cy="0" rx="12" ry="8" fill="#ff6b6b"/>
+                        <ellipse cx="0" cy="0" rx="10" ry="6" fill="#ff8888"/>
+                        <rect x="-8" y="0" width="16" height="20" fill="#d32f2f" rx="2"/>
+                        <rect x="-7" y="2" width="14" height="16" fill="#ff6b6b" rx="1" opacity="0.8"/>
+                    </g>
+                    <g stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+                        <line x1="30" y1="100" x2="10" y2="100">
+                            <animate attributeName="x1" values="30;25;30" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="x2" values="10;5;10" dur="1.5s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="170" y1="100" x2="190" y2="100">
+                            <animate attributeName="x1" values="170;175;170" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="x2" values="190;195;190" dur="1.5s" repeatCount="indefinite"/>
+                        </line>
+                    </g>
+                </svg>
+                <h1>SenpaiStreamingWorld</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="anime.html">Anime</a>
+                <a href="manga.html">Manga</a>
+            </nav>
+            <div id="userSection">
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Content -->
+    <main class="profile-container">
+        <div class="container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileUsername">User</h2>
+                    <p id="profileEmail">user@example.com</p>
+                    <p class="member-since" id="memberSince">Member since: N/A</p>
+                </div>
+            </div>
+
+            <div class="profile-menu">
+                <a href="profile.html?section=continue-watching" class="menu-item">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Continue Watching</span>
+                </a>
+                <a href="profile.html?section=continue-reading" class="menu-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>Continue Reading</span>
+                </a>
+                <a href="profile.html?section=completed-anime" class="menu-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed Anime</span>
+                </a>
+                <a href="profile.html?section=completed-manga" class="menu-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed Manga</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" onclick="logout(); return false;" class="menu-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SenpaiStreamingWorld. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check if user is logged in
+        function checkProfileAuth() {
+            // Check demo user first
+            const demoUser = localStorage.getItem('demoUser');
+            if (demoUser) {
+                const user = JSON.parse(demoUser);
+                if (user.loggedIn) {
+                    document.getElementById('profileUsername').textContent = user.username;
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('memberSince').textContent = 'Member since: 2026-01-05';
+                    return;
+                }
+            }
+            
+            // Try server
+            fetch('api/user/current')
+                .then(response => {
+                    if (!response.ok) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    if (user) {
+                        document.getElementById('profileUsername').textContent = user.username;
+                        document.getElementById('profileEmail').textContent = user.email;
+                        if (user.createdAt) {
+                            document.getElementById('memberSince').textContent = 'Member since: ' + user.createdAt.substring(0, 10);
+                        }
+                    }
+                })
+                .catch(() => {
+                    // Not logged in via server, check if demo user exists
+                    if (!demoUser) {
+                        window.location.href = 'login.html';
+                    }
+                });
+        }
+        
+        checkProfileAuth();
+    </script>
+</body>
+</html>

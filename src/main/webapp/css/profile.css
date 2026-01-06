@@ -1,0 +1,105 @@
+/* Profile Page Styles */
+
+.profile-container {
+    min-height: calc(100vh - 200px);
+    padding: 3rem 0;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background-color: var(--light-bg);
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    font-size: 6rem;
+    color: var(--primary-color);
+}
+
+.profile-info h2 {
+    color: var(--text-color);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+    color: #aaa;
+    font-size: 1.1rem;
+}
+
+.member-since {
+    margin-top: 0.5rem;
+    font-size: 0.9rem !important;
+    color: #888 !important;
+}
+
+.profile-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background-color: var(--light-bg);
+    border-radius: 15px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.menu-item:hover {
+    background-color: var(--accent-color);
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+}
+
+.menu-item i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.menu-item span {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.menu-item.logout {
+    border-color: var(--error-color);
+}
+
+.menu-item.logout:hover {
+    background-color: var(--error-color);
+    border-color: var(--error-color);
+}
+
+.menu-item.logout i,
+.menu-item.logout span {
+    color: var(--error-color);
+}
+
+.menu-item.logout:hover i,
+.menu-item.logout:hover span {
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-menu {
+        grid-template-columns: 1fr;
+    }
+}

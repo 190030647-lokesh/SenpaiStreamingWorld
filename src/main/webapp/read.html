@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Manga - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/reader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center;">
+                    <h1 style="color: #ff6b6b;">SenpaiStreamingWorld</h1>
+                </a>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="anime.html">Anime</a>
+                <a href="manga.html" class="active">Manga</a>
+            </nav>
+            <div id="userSection">
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Back Button -->
+    <div class="back-nav" style="padding: 1rem 2rem; background: #16213e;">
+        <a href="javascript:history.back()" class="back-btn" style="color: #ff6b6b; text-decoration: none; font-size: 1.1rem;">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Reader Section -->
+    <main class="reader-container" style="padding: 2rem;">
+        <div class="reader-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <h2 id="mangaTitle" style="color: #ff6b6b;">Loading...</h2>
+            <div class="reader-controls" style="display: flex; gap: 0.5rem;">
+                <select id="chapterSelector" style="padding: 0.5rem 1rem; background: #16213e; color: #eaeaea; border: 1px solid #ff6b6b; border-radius: 5px;">
+                </select>
+                <button id="zoomInBtn" style="padding: 0.5rem 1rem; background: #16213e; color: #eaeaea; border: none; border-radius: 5px; cursor: pointer;" title="Zoom In">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button id="zoomOutBtn" style="padding: 0.5rem 1rem; background: #16213e; color: #eaeaea; border: none; border-radius: 5px; cursor: pointer;" title="Zoom Out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Manga Pages Display -->
+        <div id="mangaReader" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; background: #0a0a14; padding: 2rem; border-radius: 10px; min-height: 500px;">
+            <p style="color: #aaa; text-align: center;">
+                <i class="fas fa-book-open" style="font-size: 4rem; color: #ff6b6b; display: block; margin-bottom: 1rem;"></i>
+                Manga pages would be displayed here.<br>
+                This is a demo - actual manga content requires proper licensing.
+            </p>
+        </div>
+
+        <!-- Chapter Navigation -->
+        <div class="chapter-nav" style="display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0;">
+            <button id="prevChapter" style="padding: 0.8rem 1.5rem; background: #16213e; color: #eaeaea; border: none; border-radius: 5px; cursor: pointer;">
+                <i class="fas fa-chevron-left"></i> Previous Chapter
+            </button>
+            <a href="manga.html" style="padding: 0.8rem 1.5rem; background: #0f3460; color: #eaeaea; text-decoration: none; border-radius: 5px;">
+                <i class="fas fa-list"></i> Manga List
+            </a>
+            <button id="nextChapter" style="padding: 0.8rem 1.5rem; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Next Chapter <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Manga Info -->
+        <div class="manga-info-section" style="padding: 2rem; background: #16213e; margin: 2rem 0; border-radius: 10px;">
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                <img id="mangaCover" src="" alt="Manga Cover" style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px;">
+                <div class="details-text" style="flex: 1; min-width: 300px;">
+                    <h3 id="mangaTitleInfo" style="color: #ff6b6b; font-size: 1.8rem; margin-bottom: 1rem;">Loading...</h3>
+                    <p style="margin: 0.5rem 0;"><strong>Author:</strong> <span id="mangaAuthor"></span></p>
+                    <p style="margin: 0.5rem 0;"><strong>Genre:</strong> <span id="mangaGenre"></span></p>
+                    <p style="margin: 0.5rem 0;"><strong>Rating:</strong> <i class="fas fa-star" style="color: #ff6b6b;"></i> <span id="mangaRating"></span></p>
+                    <p style="margin: 0.5rem 0;"><strong>Chapters:</strong> <span id="totalChapters"></span></p>
+                    <p style="margin-top: 1rem;"><strong>Description:</strong></p>
+                    <p id="mangaDescription" style="color: #aaa; line-height: 1.6;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter List -->
+        <div class="chapter-list-section" style="margin: 2rem 0;">
+            <h3 style="margin-bottom: 1rem; color: #ff6b6b;">Chapters</h3>
+            <div id="chapterList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem;">
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="background: #16213e; padding: 2rem; text-align: center; margin-top: 2rem;">
+        <p>&copy; 2026 SenpaiStreamingWorld. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Manga Database
+        const mangaDatabase = {
+            '1': {
+                title: 'One Piece',
+                author: 'Eiichiro Oda',
+                genre: 'Adventure, Shounen',
+                rating: '9.2',
+                chapters: 1100,
+                cover: 'https://cdn.myanimelist.net/images/manga/2/253146.jpg',
+                description: 'Gol D. Roger, a man referred to as the "Pirate King," is set to be executed by the World Government. But just before his death, he confirms the existence of a great treasure, One Piece, located somewhere within the vast ocean known as the Grand Line.'
+            },
+            '2': {
+                title: 'Chainsaw Man',
+                author: 'Tatsuki Fujimoto',
+                genre: 'Action, Horror',
+                rating: '8.8',
+                chapters: 160,
+                cover: 'https://cdn.myanimelist.net/images/manga/3/179883.jpg',
+                description: 'Denji has a simple dream—to live a happy and peaceful life, spending time with a girl he likes. This is a far cry from reality, however, as Denji is forced by the yakuza into killing devils in order to pay off his crushing debts.'
+            },
+            '3': {
+                title: 'Solo Leveling',
+                author: 'Chugong',
+                genre: 'Action, Fantasy',
+                rating: '8.6',
+                chapters: 200,
+                cover: 'https://cdn.myanimelist.net/images/manga/2/260977.jpg',
+                description: 'In a world where hunters — humans who possess magical abilities — must battle deadly monsters to protect the human race from certain annihilation, a notoriously weak hunter named Sung Jinwoo finds himself in a seemingly endless struggle for survival.'
+            },
+            '4': {
+                title: 'Jujutsu Kaisen',
+                author: 'Gege Akutami',
+                genre: 'Action, Supernatural',
+                rating: '8.8',
+                chapters: 270,
+                cover: 'https://cdn.myanimelist.net/images/manga/3/210341.jpg',
+                description: 'Yuji Itadori is a boy with tremendous physical strength, though he lives a completely ordinary high school life. One day, to save a friend who has been attacked by Curses, he eats a finger of Ryomen Sukuna and takes the Curse into his own soul.'
+            },
+            '5': {
+                title: 'My Hero Academia',
+                author: 'Kohei Horikoshi',
+                genre: 'Action, Superhero',
+                rating: '8.7',
+                chapters: 430,
+                cover: 'https://cdn.myanimelist.net/images/manga/1/261755.jpg',
+                description: 'Middle school student Izuku Midoriya wants to be a hero more than anything, but he hasn\'t got an ounce of power in him. With no chance of ever getting into the prestigious U.A. High School for budding heroes, his life is looking more and more like a dead end.'
+            },
+            '6': {
+                title: 'Naruto',
+                author: 'Masashi Kishimoto',
+                genre: 'Action, Shounen',
+                rating: '8.5',
+                chapters: 700,
+                cover: 'https://cdn.myanimelist.net/images/manga/2/258749.jpg',
+                description: 'Naruto Uzumaki, a mischievous adolescent ninja, struggles as he searches for recognition and dreams of becoming the Hokage, the village\'s leader and strongest ninja.'
+            },
+            '7': {
+                title: 'Attack on Titan',
+                author: 'Hajime Isayama',
+                genre: 'Action, Dark Fantasy',
+                rating: '9.0',
+                chapters: 141,
+                cover: 'https://cdn.myanimelist.net/images/manga/1/259336.jpg',
+                description: 'In this post-apocalyptic sci-fi story, humanity has been devastated by the bizarre, giant humanoids known as the Titans. Little is known about where they came from or why they are bent on consuming mankind.'
+            },
+            '8': {
+                title: 'Dragon Ball',
+                author: 'Akira Toriyama',
+                genre: 'Action, Shounen',
+                rating: '8.6',
+                chapters: 520,
+                cover: 'https://cdn.myanimelist.net/images/manga/2/258876.jpg',
+                description: 'Goku is a strange, young boy who lives in the woods. But when a girl named Bulma finds him in search of a mystical Dragon Ball, his quiet life takes a turn for the exciting.'
+            },
+            '9': {
+                title: 'Berserk',
+                author: 'Kentaro Miura',
+                genre: 'Action, Seinen',
+                rating: '9.4',
+                chapters: 380,
+                cover: 'https://cdn.myanimelist.net/images/manga/2/243669.jpg',
+                description: 'Guts, a former mercenary now known as the "Black Swordsman," is out for revenge. After a tumultuous childhood, he finally finds someone he respects and believes he can trust, only to have everything he cares about taken from him.'
+            },
+            '10': {
+                title: 'Kaguya-sama: Love is War',
+                author: 'Aka Akasaka',
+                genre: 'Romance, Comedy',
+                rating: '8.9',
+                chapters: 281,
+                cover: 'https://cdn.myanimelist.net/images/manga/1/268224.jpg',
+                description: 'Kaguya Shinomiya and Miyuki Shirogane are the members of the incredibly prestigious Shuchiin Academy\'s student council, asserting their positions as geniuses among geniuses. All the time they spend together has caused the two of them to develop feelings for each other.'
+            }
+        };
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const mangaId = urlParams.get('id') || '1';
+        let currentChapter = parseInt(urlParams.get('chapter') || '1');
+        let zoomLevel = 1;
+
+        // Load manga data
+        function loadMangaData() {
+            const manga = mangaDatabase[mangaId];
+            
+            if (!manga) {
+                window.location.href = 'manga.html';
+                return;
+            }
+            
+            // Update page content
+            document.title = `Read ${manga.title} - SenpaiStreamingWorld`;
+            document.getElementById('mangaTitle').textContent = `${manga.title} - Chapter ${currentChapter}`;
+            document.getElementById('mangaTitleInfo').textContent = manga.title;
+            document.getElementById('mangaCover').src = manga.cover;
+            document.getElementById('mangaAuthor').textContent = manga.author;
+            document.getElementById('mangaGenre').textContent = manga.genre;
+            document.getElementById('mangaRating').textContent = manga.rating;
+            document.getElementById('totalChapters').textContent = manga.chapters;
+            document.getElementById('mangaDescription').textContent = manga.description;
+            
+            // Generate chapter selector
+            const chapterSelector = document.getElementById('chapterSelector');
+            chapterSelector.innerHTML = '';
+            for (let i = 1; i <= Math.min(manga.chapters, 50); i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Chapter ${i}`;
+                if (i === currentChapter) option.selected = true;
+                chapterSelector.appendChild(option);
+            }
+            
+            chapterSelector.onchange = function() {
+                window.location.href = `read.html?id=${mangaId}&chapter=${this.value}`;
+            };
+            
+            // Generate chapter list
+            const chapterList = document.getElementById('chapterList');
+            chapterList.innerHTML = '';
+            for (let i = 1; i <= Math.min(manga.chapters, 30); i++) {
+                const chapterLink = document.createElement('a');
+                chapterLink.href = `read.html?id=${mangaId}&chapter=${i}`;
+                chapterLink.style.cssText = 'padding: 0.6rem; background: #16213e; color: #eaeaea; text-decoration: none; border-radius: 5px; text-align: center;';
+                if (i === currentChapter) {
+                    chapterLink.style.background = '#ff6b6b';
+                    chapterLink.style.color = 'white';
+                }
+                chapterLink.textContent = `Ch ${i}`;
+                chapterList.appendChild(chapterLink);
+            }
+            
+            // Setup navigation
+            document.getElementById('prevChapter').onclick = function() {
+                if (currentChapter > 1) {
+                    window.location.href = `read.html?id=${mangaId}&chapter=${currentChapter - 1}`;
+                }
+            };
+            
+            document.getElementById('nextChapter').onclick = function() {
+                if (currentChapter < manga.chapters) {
+                    window.location.href = `read.html?id=${mangaId}&chapter=${currentChapter + 1}`;
+                }
+            };
+            
+            // Disable buttons if at start/end
+            if (currentChapter <= 1) {
+                document.getElementById('prevChapter').style.opacity = '0.5';
+                document.getElementById('prevChapter').style.cursor = 'not-allowed';
+            }
+            if (currentChapter >= manga.chapters) {
+                document.getElementById('nextChapter').style.opacity = '0.5';
+                document.getElementById('nextChapter').style.cursor = 'not-allowed';
+            }
+        }
+        
+        // Zoom controls
+        const reader = document.getElementById('mangaReader');
+        
+        document.getElementById('zoomInBtn').addEventListener('click', function() {
+            zoomLevel += 0.1;
+            reader.style.transform = `scale(${zoomLevel})`;
+        });
+        
+        document.getElementById('zoomOutBtn').addEventListener('click', function() {
+            if (zoomLevel > 0.5) {
+                zoomLevel -= 0.1;
+                reader.style.transform = `scale(${zoomLevel})`;
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                document.getElementById('prevChapter').click();
+            } else if (e.key === 'ArrowRight') {
+                document.getElementById('nextChapter').click();
+            }
+        });
+        
+        loadMangaData();
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

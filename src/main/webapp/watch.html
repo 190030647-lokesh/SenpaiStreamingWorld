@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Anime - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a2e;
+            color: #eaeaea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .watch-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        /* Top Section - Video + Anime Info Side by Side */
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Video Section */
+        .video-section {
+            background: #16213e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .back-nav {
+            padding: 0.8rem 1rem;
+            background: #0f0f1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .back-btn {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-btn:hover {
+            color: #ff8888;
+        }
+        .video-title {
+            color: #eaeaea;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .video-wrapper {
+            background: #000;
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .episode-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #0f0f1a;
+        }
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-btn.prev {
+            background: #16213e;
+            color: #eaeaea;
+        }
+        .nav-btn.next {
+            background: #ff6b6b;
+            color: white;
+        }
+        .nav-btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Player Controls Bar */
+        .player-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background: #0f0f1a;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .control-options {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: #eaeaea;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .control-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .control-item i {
+            color: #eaeaea;
+        }
+        .control-item.active i {
+            color: #ff6b6b;
+        }
+        .control-item span.status {
+            color: #ff6b6b;
+            font-weight: 500;
+        }
+        .control-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .control-buttons button {
+            background: transparent;
+            border: none;
+            color: #eaeaea;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: color 0.3s;
+        }
+        .control-buttons button:hover {
+            color: #ff6b6b;
+        }
+        
+        /* Episode Navigation Row */
+        .episode-nav-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: #0f0f1a;
+            border-top: 1px solid #2a2a4a;
+        }
+        .episode-nav-row .nav-btn {
+            flex: 1;
+            max-width: 150px;
+            justify-content: center;
+        }
+        
+        /* Server Selection */
+        .server-selection {
+            display: flex;
+            align-items: stretch;
+            background: #16213e;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+        }
+        .episode-info-box {
+            background: #ff6b6b;
+            padding: 1rem 1.5rem;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .episode-info-box h4 {
+            color: #1a1a2e;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .episode-info-box p {
+            color: #1a1a2e;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .server-options {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+        }
+        .server-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.6rem;
+        }
+        .server-row:last-child {
+            margin-bottom: 0;
+        }
+        .server-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 70px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .server-label i {
+            font-size: 1rem;
+        }
+        .server-label.sub i {
+            color: #ff6b6b;
+        }
+        .server-label.dub i {
+            color: #a855f7;
+        }
+        .server-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .server-btn {
+            padding: 0.5rem 1.2rem;
+            border: 1px solid #3a3a5a;
+            background: transparent;
+            color: #eaeaea;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .server-btn:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        .server-btn.active {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
+            color: white;
+        }
+        .server-btn.dub-active {
+            background: #a855f7;
+            border-color: #a855f7;
+            color: white;
+        }
+        
+        /* Anime Info Card - Top Right */
+        .anime-info-card {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 1rem;
+            height: fit-content;
+        }
+        .anime-poster-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .badge-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .badge-sub {
+            background: #ff6b6b;
+            color: white;
+        }
+        .badge-hd {
+            background: #4CAF50;
+            color: white;
+        }
+        .anime-title {
+            color: #ff6b6b;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        .anime-meta {
+            font-size: 0.9rem;
+        }
+        .anime-meta p {
+            margin: 0.4rem 0;
+            color: #ccc;
+        }
+        .anime-meta strong {
+            color: #eaeaea;
+        }
+        .anime-meta .rating {
+            color: #ffc107;
+        }
+        .anime-description {
+            color: #999;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2a2a4a;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        /* Episode List - Bottom */
+        .episodes-section {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        .episodes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .episodes-header h3 {
+            color: #ff6b6b;
+            font-size: 1.2rem;
+        }
+        .episodes-header span {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.8rem;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        .episode-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .episode-grid::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 3px;
+        }
+        .episode-grid::-webkit-scrollbar-thumb {
+            background: #ff6b6b;
+            border-radius: 3px;
+        }
+        .episode-item {
+            padding: 0.7rem;
+            background: #1a1a2e;
+            color: #eaeaea;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        .episode-item:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .episode-item.active {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .top-section {
+                grid-template-columns: 1fr;
+            }
+            .anime-info-card {
+                display: grid;
+                grid-template-columns: 150px 1fr;
+                gap: 1rem;
+            }
+            .anime-poster {
+                height: 220px;
+            }
+            .anime-poster-container {
+                margin-bottom: 0;
+            }
+            .anime-description {
+                display: none;
+            }
+        }
+        @media (max-width: 500px) {
+            .watch-page {
+                padding: 0.5rem;
+            }
+            .anime-info-card {
+                grid-template-columns: 1fr;
+            }
+            .anime-poster {
+                height: 150px;
+            }
+            .episode-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <h1 style="color: #ff6b6b;">SenpaiStreamingWorld</h1>
+                </a>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="anime.html" class="active">Anime</a>
+                <a href="manga.html">Manga</a>
+            </nav>
+            <div id="userSection">
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="watch-page">
+        <!-- Top Section: Video + Anime Info -->
+        <div class="top-section">
+            <!-- Video Player Section -->
+            <div class="video-section">
+                <div class="back-nav">
+                    <a href="javascript:history.back()" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <span class="video-title" id="videoTitle">Loading...</span>
+                </div>
+                <div class="video-wrapper">
+                    <video id="videoPlayer" controls poster="">
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                
+                <!-- Player Controls Bar -->
+                <div class="player-controls-bar">
+                    <div class="control-options">
+                        <div class="control-item" onclick="toggleExpand()">
+                            <i class="fas fa-expand"></i>
+                            <span>Expand</span>
+                        </div>
+                        <div class="control-item active" id="lightToggle" onclick="toggleLight()">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Light</span>
+                            <span class="status" id="lightStatus">On</span>
+                        </div>
+                        <div class="control-item active" id="autoPlayToggle" onclick="toggleAutoPlay()">
+                            <i class="fas fa-play"></i>
+                            <span>Auto Play</span>
+                            <span class="status" id="autoPlayStatus">On</span>
+                        </div>
+                        <div class="control-item active" id="autoNextToggle" onclick="toggleAutoNext()">
+                            <i class="fas fa-forward"></i>
+                            <span>Auto Next</span>
+                            <span class="status" id="autoNextStatus">On</span>
+                        </div>
+                        <div class="control-item active" id="skipIntroToggle" onclick="toggleSkipIntro()">
+                            <i class="fas fa-forward-fast"></i>
+                            <span>Auto Skip Intro</span>
+                            <span class="status" id="skipIntroStatus">On</span>
+                        </div>
+                    </div>
+                    <div class="control-buttons">
+                        <button title="Previous Episode" onclick="goToPrevEpisode()"><i class="fas fa-backward"></i></button>
+                        <button title="Next Episode" onclick="goToNextEpisode()"><i class="fas fa-forward"></i></button>
+                        <button title="Add to List"><i class="fas fa-plus"></i></button>
+                        <button title="Share"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Server Selection -->
+                <div class="server-selection">
+                    <div class="episode-info-box">
+                        <h4>You are watching</h4>
+                        <h4 id="currentEpisodeText">Episode 1</h4>
+                        <p>If current server doesn't work<br>please try other servers beside.</p>
+                    </div>
+                    <div class="server-options">
+                        <div class="server-row">
+                            <div class="server-label sub">
+                                <i class="fas fa-closed-captioning"></i>
+                                <span>SUB:</span>
+                            </div>
+                            <div class="server-buttons">
+                                <button class="server-btn active" onclick="selectServer('sub', 1)">HD-1</button>
+                                <button class="server-btn" onclick="selectServer('sub', 2)">HD-2</button>
+                                <button class="server-btn" onclick="selectServer('sub', 3)">HD-3</button>
+                            </div>
+                        </div>
+                        <div class="server-row">
+                            <div class="server-label dub">
+                                <i class="fas fa-microphone"></i>
+                                <span>DUB:</span>
+                            </div>
+                            <div class="server-buttons">
+                                <button class="server-btn" onclick="selectServer('dub', 1)">HD-1</button>
+                                <button class="server-btn" onclick="selectServer('dub', 2)">HD-2</button>
+                                <button class="server-btn" onclick="selectServer('dub', 3)">HD-3</button>
+                            </div>
+                        </div>
+                        <!-- Episode Navigation under DUB -->
+                        <div class="episode-nav-row">
+                            <button class="nav-btn prev" id="prevEpisode">
+                                <i class="fas fa-chevron-left"></i> Prev
+                            </button>
+                            <button class="nav-btn next" id="nextEpisode">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anime Info Card - Top Right -->
+            <div class="anime-info-card">
+                <div class="anime-poster-container">
+                    <img id="animePoster" class="anime-poster" src="" alt="Anime Poster">
+                    <div class="badge-container">
+                        <span class="badge badge-sub">SUB</span>
+                        <span class="badge badge-hd">HD</span>
+                    </div>
+                </div>
+                <div class="anime-info-content">
+                    <h2 class="anime-title" id="animeTitle">Loading...</h2>
+                    <div class="anime-meta">
+                        <p><strong>Genre:</strong> <span id="animeGenre"></span></p>
+                        <p><strong>Rating:</strong> <i class="fas fa-star rating"></i> <span id="animeRating"></span></p>
+                        <p><strong>Episodes:</strong> <span id="totalEpisodes"></span></p>
+                        <p><strong>Year:</strong> <span id="animeYear"></span></p>
+                        <p><strong>Status:</strong> <span id="animeStatus">Completed</span></p>
+                    </div>
+                    <p class="anime-description" id="animeDescription"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Episode List - Bottom -->
+        <div class="episodes-section">
+            <div class="episodes-header">
+                <h3><i class="fas fa-list"></i> Episodes</h3>
+                <span id="episodeCount">0 Episodes</span>
+            </div>
+            <div class="episode-grid" id="episodeList">
+                <!-- Episodes loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SenpaiStreamingWorld. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Anime Database
+        const animeDatabase = {
+            '1': {
+                title: 'Attack on Titan',
+                genre: 'Action, Dark Fantasy',
+                rating: '9.0',
+                episodes: 87,
+                year: '2013',
+                status: 'Completed',
+                poster: 'https://cdn.myanimelist.net/images/anime/10/47347.jpg',
+                description: 'After his hometown is destroyed and his mother is killed, young Eren Jaeger vows to cleanse the earth of the giant humanoid Titans that have brought humanity to the brink of extinction.'
+            },
+            '2': {
+                title: 'Demon Slayer',
+                genre: 'Action, Shounen',
+                rating: '8.7',
+                episodes: 55,
+                year: '2019',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/1286/99889.jpg',
+                description: 'A family is attacked by demons and only two members survive - Tanjiro and his sister Nezuko, who is turning into a demon slowly. Tanjiro sets out to become a demon slayer to avenge his family and cure his sister.'
+            },
+            '3': {
+                title: 'My Hero Academia',
+                genre: 'Action, Superhero',
+                rating: '8.5',
+                episodes: 138,
+                year: '2016',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/10/78745.jpg',
+                description: 'In a world where people with superpowers are the norm, Izuku Midoriya has dreams of one day becoming a Hero despite being bullied by his classmates for not having a Quirk.'
+            },
+            '4': {
+                title: 'Spy x Family',
+                genre: 'Comedy, Action',
+                rating: '8.9',
+                episodes: 37,
+                year: '2022',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/1171/109222.jpg',
+                description: 'A spy on an undercover mission gets married and adopts a child as part of his cover. His wife and daughter have secrets of their own, and all three must strive to keep together.'
+            },
+            '5': {
+                title: 'Frieren: Beyond Journey\'s End',
+                genre: 'Fantasy, Adventure',
+                rating: '9.1',
+                episodes: 28,
+                year: '2023',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/1015/138006.jpg',
+                description: 'After the party of heroes defeated the Demon King, they went their separate ways. Frieren, the mage, begins a new journey to understand the meaning of life and human connections.'
+            },
+            '6': {
+                title: 'Jujutsu Kaisen',
+                genre: 'Action, Supernatural',
+                rating: '8.8',
+                episodes: 47,
+                year: '2020',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/1000/110531.jpg',
+                description: 'A boy swallows a cursed talisman - the finger of a demon - and becomes cursed himself. He enters a shaman school to be able to locate the demon\'s other body parts and thus exorcise himself.'
+            },
+            '7': {
+                title: 'One Piece',
+                genre: 'Adventure, Shounen',
+                rating: '8.9',
+                episodes: 1100,
+                year: '1999',
+                status: 'Ongoing',
+                poster: 'https://cdn.myanimelist.net/images/anime/1244/138851.jpg',
+                description: 'Monkey D. Luffy sets off on an adventure with his pirate crew in hopes of finding the greatest treasure ever, known as One Piece.'
+            },
+            '8': {
+                title: 'Naruto Shippuden',
+                genre: 'Action, Shounen',
+                rating: '8.6',
+                episodes: 500,
+                year: '2007',
+                status: 'Completed',
+                poster: 'https://cdn.myanimelist.net/images/anime/1141/142503.jpg',
+                description: 'Naruto Uzumaki, is a loud, hyperactive, adolescent ninja who constantly searches for approval and recognition, as well as to become Hokage.'
+            },
+            '9': {
+                title: 'Vinland Saga',
+                genre: 'Action, Seinen',
+                rating: '8.8',
+                episodes: 48,
+                year: '2019',
+                status: 'Completed',
+                poster: 'https://cdn.myanimelist.net/images/anime/1384/119988.jpg',
+                description: 'Thorfinn pursues a journey with his father\'s killer in order to take revenge and end his life in a duel as an honorable warrior.'
+            },
+            '10': {
+                title: 'Your Name',
+                genre: 'Romance, Drama',
+                rating: '9.0',
+                episodes: 1,
+                year: '2016',
+                status: 'Movie',
+                poster: 'https://cdn.myanimelist.net/images/anime/1822/122795.jpg',
+                description: 'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?'
+            }
+        };
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const animeId = urlParams.get('id') || '1';
+        let currentEpisode = parseInt(urlParams.get('episode') || '1');
+
+        // Load anime data
+        function loadAnimeData() {
+            const anime = animeDatabase[animeId];
+            
+            if (!anime) {
+                window.location.href = 'anime.html';
+                return;
+            }
+            
+            // Update page content
+            document.title = `${anime.title} - Episode ${currentEpisode} | SenpaiStreamingWorld`;
+            document.getElementById('videoTitle').textContent = `${anime.title} - Episode ${currentEpisode}`;
+            document.getElementById('animeTitle').textContent = anime.title;
+            document.getElementById('animePoster').src = anime.poster;
+            document.getElementById('animeGenre').textContent = anime.genre;
+            document.getElementById('animeRating').textContent = anime.rating;
+            document.getElementById('totalEpisodes').textContent = anime.episodes;
+            document.getElementById('animeYear').textContent = anime.year;
+            document.getElementById('animeStatus').textContent = anime.status;
+            document.getElementById('animeDescription').textContent = anime.description;
+            document.getElementById('episodeCount').textContent = `${anime.episodes} Episodes`;
+            document.getElementById('currentEpisodeText').textContent = `Episode ${currentEpisode}`;
+            
+            // Set video poster
+            document.getElementById('videoPlayer').poster = anime.poster;
+            
+            // Generate episode list
+            const episodeList = document.getElementById('episodeList');
+            episodeList.innerHTML = '';
+            const maxEpisodes = Math.min(anime.episodes, 50);
+            for (let i = 1; i <= maxEpisodes; i++) {
+                const episodeLink = document.createElement('a');
+                episodeLink.href = `watch.html?id=${animeId}&episode=${i}`;
+                episodeLink.className = `episode-item ${i === currentEpisode ? 'active' : ''}`;
+                episodeLink.textContent = `EP ${i}`;
+                episodeList.appendChild(episodeLink);
+            }
+            
+            // Setup navigation
+            const prevBtn = document.getElementById('prevEpisode');
+            const nextBtn = document.getElementById('nextEpisode');
+            
+            prevBtn.onclick = function() {
+                if (currentEpisode > 1) {
+                    window.location.href = `watch.html?id=${animeId}&episode=${currentEpisode - 1}`;
+                }
+            };
+            
+            nextBtn.onclick = function() {
+                if (currentEpisode < anime.episodes) {
+                    window.location.href = `watch.html?id=${animeId}&episode=${currentEpisode + 1}`;
+                }
+            };
+            
+            // Disable buttons if at start/end
+            if (currentEpisode <= 1) {
+                prevBtn.disabled = true;
+            }
+            if (currentEpisode >= anime.episodes) {
+                nextBtn.disabled = true;
+            }
+        }
+        
+        // Server selection function
+        function selectServer(type, server) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.server-btn').forEach(btn => {
+                btn.classList.remove('active', 'dub-active');
+            });
+            
+            // Find the clicked button and add active class
+            const rows = document.querySelectorAll('.server-row');
+            const rowIndex = type === 'sub' ? 0 : 1;
+            const buttons = rows[rowIndex].querySelectorAll('.server-btn');
+            
+            if (type === 'sub') {
+                buttons[server - 1].classList.add('active');
+            } else {
+                buttons[server - 1].classList.add('dub-active');
+            }
+            
+            // Show notification (you can customize this)
+            console.log(`Selected ${type.toUpperCase()} server HD-${server}`);
+        }
+        
+        // Player Control Functions
+        let lightOn = true;
+        let autoPlay = true;
+        let autoNext = true;
+        let skipIntro = true;
+        
+        function toggleExpand() {
+            const video = document.getElementById('videoPlayer');
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        }
+        
+        function toggleLight() {
+            lightOn = !lightOn;
+            const toggle = document.getElementById('lightToggle');
+            const status = document.getElementById('lightStatus');
+            
+            if (lightOn) {
+                toggle.classList.add('active');
+                status.textContent = 'On';
+                document.body.style.background = '#1a1a2e';
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'Off';
+                document.body.style.background = '#000';
+            }
+        }
+        
+        function toggleAutoPlay() {
+            autoPlay = !autoPlay;
+            const toggle = document.getElementById('autoPlayToggle');
+            const status = document.getElementById('autoPlayStatus');
+            const video = document.getElementById('videoPlayer');
+            
+            if (autoPlay) {
+                toggle.classList.add('active');
+                status.textContent = 'On';
+                video.autoplay = true;
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'Off';
+                video.autoplay = false;
+            }
+        }
+        
+        function toggleAutoNext() {
+            autoNext = !autoNext;
+            const toggle = document.getElementById('autoNextToggle');
+            const status = document.getElementById('autoNextStatus');
+            
+            if (autoNext) {
+                toggle.classList.add('active');
+                status.textContent = 'On';
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'Off';
+            }
+        }
+        
+        function toggleSkipIntro() {
+            skipIntro = !skipIntro;
+            const toggle = document.getElementById('skipIntroToggle');
+            const status = document.getElementById('skipIntroStatus');
+            
+            if (skipIntro) {
+                toggle.classList.add('active');
+                status.textContent = 'On';
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'Off';
+            }
+        }
+        
+        function goToPrevEpisode() {
+            const anime = animeDatabase[animeId];
+            if (currentEpisode > 1) {
+                window.location.href = `watch.html?id=${animeId}&episode=${currentEpisode - 1}`;
+            }
+        }
+        
+        function goToNextEpisode() {
+            const anime = animeDatabase[animeId];
+            if (currentEpisode < anime.episodes) {
+                window.location.href = `watch.html?id=${animeId}&episode=${currentEpisode + 1}`;
+            }
+        }
+        
+        // Auto next episode when video ends
+        document.getElementById('videoPlayer').addEventListener('ended', function() {
+            if (autoNext) {
+                goToNextEpisode();
+            }
+        });
+        
+        loadAnimeData();
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

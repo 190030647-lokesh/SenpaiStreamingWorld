@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:80px; height:80px; margin-bottom:15px;">
+                    <circle cx="100" cy="100" r="95" fill="#1a1a2e" stroke="#ff6b6b" stroke-width="3"/>
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+                        <animate attributeName="r" values="75;85;75" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="100" cy="100" r="65" fill="none" stroke="#ff6b6b" stroke-width="1.5" opacity="0.8"/>
+                    <g transform="translate(100, 100)">
+                        <line x1="-5" y1="-45" x2="5" y2="45" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="-3" y1="-40" x2="3" y2="40" stroke="#ff9999" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                        <ellipse cx="0" cy="0" rx="12" ry="8" fill="#ff6b6b"/>
+                        <ellipse cx="0" cy="0" rx="10" ry="6" fill="#ff8888"/>
+                        <rect x="-8" y="0" width="16" height="20" fill="#d32f2f" rx="2"/>
+                        <rect x="-7" y="2" width="14" height="16" fill="#ff6b6b" rx="1" opacity="0.8"/>
+                    </g>
+                    <g stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+                        <line x1="30" y1="100" x2="10" y2="100">
+                            <animate attributeName="x1" values="30;25;30" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="x2" values="10;5;10" dur="1.5s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="170" y1="100" x2="190" y2="100">
+                            <animate attributeName="x1" values="170;175;170" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="x2" values="190;195;190" dur="1.5s" repeatCount="indefinite"/>
+                        </line>
+                    </g>
+                </svg>
+                <h1>SenpaiStreamingWorld</h1>
+            </div>
+            <h2>Create Your Account</h2>
+            
+            <div id="alertMessage" style="display: none;"></div>
+            
+            <form id="registerForm" class="auth-form" onsubmit="return handleRegister(event)">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Choose a username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" required placeholder="Create a password" minlength="6">
+                        <i class="fas fa-eye password-toggle" id="togglePassword" style="display: none;"></i>
+                    </div>
+                    <small>Password must be at least 6 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                    <div class="password-field">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                        <i class="fas fa-eye password-toggle" id="toggleConfirmPassword" style="display: none;"></i>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        I agree to the <a href="#">Terms and Conditions</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Password visibility toggles
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        
+        passwordInput.addEventListener('input', function() {
+            togglePassword.style.display = this.value.length > 0 ? 'block' : 'none';
+        });
+        
+        confirmPasswordInput.addEventListener('input', function() {
+            toggleConfirmPassword.style.display = this.value.length > 0 ? 'block' : 'none';
+        });
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+            confirmPasswordInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!validateForm()) {
+                return false;
+            }
+            
+            try {
+                const response = await fetch('register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&confirmPassword=${encodeURIComponent(confirmPassword)}`
+                });
+                
+                // Check if response is OK first
+                if (!response.ok) {
+                    // Server might not be running - use demo mode
+                    if (response.status === 404 || response.status === 405) {
+                        demoRegister(username, email);
+                        return false;
+                    }
+                    const text = await response.text();
+                    try {
+                        const data = JSON.parse(text);
+                        showAlert(data.message || 'Registration failed. Please try again.', 'error');
+                    } catch (e) {
+                        demoRegister(username, email);
+                    }
+                    return false;
+                }
+                
+                const text = await response.text();
+                if (!text) {
+                    demoRegister(username, email);
+                    return false;
+                }
+                
+                const data = JSON.parse(text);
+                
+                if (data.success) {
+                    showAlert('Registration successful! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?registered=true';
+                    }, 500);
+                } else {
+                    showAlert(data.message || 'Registration failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                demoRegister(username, email);
+            }
+            
+            return false;
+        }
+        
+        // Demo register function when server is not available
+        function demoRegister(username, email) {
+            // Store registered user in localStorage
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            registeredUsers.push({ username, email });
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            
+            showAlert('Registration successful! Redirecting to login...', 'success');
+            setTimeout(() => {
+                window.location.href = 'login.html?registered=true';
+            }, 500);
+        }
+        
+        function validateForm() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            
+            // Email validation
+            if (!email.includes('@gmail.com')) {
+                showAlert('Please enter a correct Gmail address', 'error');
+                return false;
+            }
+            
+            // Password match validation
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'error');
+                return false;
+            }
+            
+            // Password length validation
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long!', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation' : 'check'}-circle"></i> ${message}`;
+            alertDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#1a1a2e" stroke="#ff6b6b" stroke-width="3"/>
+  
+  <!-- Energy waves (action effect) -->
+  <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+    <animate attributeName="r" values="75;85;75" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="65" fill="none" stroke="#ff6b6b" stroke-width="1.5" opacity="0.8"/>
+  
+  <!-- Stylized Katana (action symbol) -->
+  <g transform="translate(100, 100)">
+    <!-- Blade -->
+    <line x1="-5" y1="-45" x2="5" y2="45" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+    <line x1="-3" y1="-40" x2="3" y2="40" stroke="#ff9999" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    
+    <!-- Handguard -->
+    <ellipse cx="0" cy="0" rx="12" ry="8" fill="#ff6b6b"/>
+    <ellipse cx="0" cy="0" rx="10" ry="6" fill="#ff8888"/>
+    
+    <!-- Handle -->
+    <rect x="-8" y="0" width="16" height="20" fill="#d32f2f" rx="2"/>
+    <rect x="-7" y="2" width="14" height="16" fill="#ff6b6b" rx="1" opacity="0.8"/>
+  </g>
+  
+  <!-- Dynamic speed lines (action effect) -->
+  <g stroke="#ff6b6b" stroke-width="2" opacity="0.6">
+    <line x1="30" y1="100" x2="10" y2="100">
+      <animate attributeName="x1" values="30;25;30" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="10;5;10" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="170" y1="100" x2="190" y2="100">
+      <animate attributeName="x1" values="170;175;170" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="190;195;190" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Text wrapper -->
+  <defs>
+    <path id="circlePath" d="M 50, 100 A 50, 50 0 0, 1 150, 100 A 50, 50 0 0, 1 50, 100" fill="none"/>
+  </defs>
+  
+  <!-- Curved text at bottom -->
+  <text font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ff6b6b" letter-spacing="2" opacity="0.9">
+    <textPath href="#circlePath" startOffset="50%" text-anchor="middle">
+      SENPAI STREAMING
+    </textPath>
+  </text>
+</svg>

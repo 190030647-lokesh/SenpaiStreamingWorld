@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Anime - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>SenpaiStreamingWorld</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="anime.html" class="active">Anime</a>
+                <a href="manga.html">Manga</a>
+            </nav>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search anime..." id="searchInput">
+                    <i class="fas fa-search" onclick="searchAnime()"></i>
+                </div>
+                <div id="userSection">
+                    <a href="login.html" class="login-btn">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Genre Filter -->
+    <section class="genre-filter">
+        <div class="container">
+            <h2><i class="fas fa-tv"></i> Browse Anime</h2>
+            <div class="genre-buttons">
+                <button class="genre-btn active" onclick="filterByGenre('all')">All</button>
+                <button class="genre-btn" onclick="filterByGenre('Action')">Action</button>
+                <button class="genre-btn" onclick="filterByGenre('Romance')">Romance</button>
+                <button class="genre-btn" onclick="filterByGenre('Comedy')">Comedy</button>
+                <button class="genre-btn" onclick="filterByGenre('Fantasy')">Fantasy</button>
+                <button class="genre-btn" onclick="filterByGenre('Shounen')">Shounen</button>
+                <button class="genre-btn" onclick="filterByGenre('Seinen')">Seinen</button>
+                <button class="genre-btn" onclick="filterByGenre('Horror')">Horror</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anime Grid -->
+    <main class="main-content">
+        <div class="container">
+            <div class="card-grid" id="animeGrid">
+                <!-- Anime Cards -->
+                <a href="watch.html?id=1" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/anime/10/47347.jpg" alt="Attack on Titan">
+                    <div class="card-info">
+                        <h3>Attack on Titan</h3>
+                        <p>Action, Dark Fantasy</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.0</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=2" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/anime/1286/99889.jpg" alt="Demon Slayer">
+                    <div class="card-info">
+                        <h3>Demon Slayer</h3>
+                        <p>Action, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.7</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=3" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/anime/10/78745.jpg" alt="My Hero Academia">
+                    <div class="card-info">
+                        <h3>My Hero Academia</h3>
+                        <p>Action, Superhero</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.5</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=4" class="content-card" data-genre="Comedy">
+                    <img src="https://cdn.myanimelist.net/images/anime/1171/109222.jpg" alt="Spy x Family">
+                    <div class="card-info">
+                        <h3>Spy x Family</h3>
+                        <p>Comedy, Action</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.9</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=5" class="content-card" data-genre="Fantasy">
+                    <img src="https://cdn.myanimelist.net/images/anime/1015/138006.jpg" alt="Frieren">
+                    <div class="card-info">
+                        <h3>Frieren: Beyond Journey's End</h3>
+                        <p>Fantasy, Adventure</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.1</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=6" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/anime/1000/110531.jpg" alt="Jujutsu Kaisen">
+                    <div class="card-info">
+                        <h3>Jujutsu Kaisen</h3>
+                        <p>Action, Supernatural</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.8</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=7" class="content-card" data-genre="Shounen">
+                    <img src="https://cdn.myanimelist.net/images/anime/1244/138851.jpg" alt="One Piece">
+                    <div class="card-info">
+                        <h3>One Piece</h3>
+                        <p>Adventure, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.9</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=8" class="content-card" data-genre="Shounen">
+                    <img src="https://cdn.myanimelist.net/images/anime/1141/142503.jpg" alt="Naruto Shippuden">
+                    <div class="card-info">
+                        <h3>Naruto Shippuden</h3>
+                        <p>Action, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.6</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=9" class="content-card" data-genre="Seinen">
+                    <img src="https://cdn.myanimelist.net/images/anime/1384/119988.jpg" alt="Vinland Saga">
+                    <div class="card-info">
+                        <h3>Vinland Saga</h3>
+                        <p>Action, Seinen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.8</div>
+                    </div>
+                </a>
+                <a href="watch.html?id=10" class="content-card" data-genre="Romance">
+                    <img src="https://cdn.myanimelist.net/images/anime/1822/122795.jpg" alt="Your Name">
+                    <div class="card-info">
+                        <h3>Your Name</h3>
+                        <p>Romance, Drama</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.0</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SenpaiStreamingWorld. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        function filterByGenre(genre) {
+            const cards = document.querySelectorAll('.content-card');
+            const buttons = document.querySelectorAll('.genre-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            cards.forEach(card => {
+                if (genre === 'all' || card.dataset.genre === genre) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function searchAnime() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.content-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') searchAnime();
+        });
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

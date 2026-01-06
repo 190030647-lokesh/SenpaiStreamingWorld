@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Manga - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>SenpaiStreamingWorld</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="anime.html">Anime</a>
+                <a href="manga.html" class="active">Manga</a>
+            </nav>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search manga..." id="searchInput">
+                    <i class="fas fa-search" onclick="searchManga()"></i>
+                </div>
+                <div id="userSection">
+                    <a href="login.html" class="login-btn">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Genre Filter -->
+    <section class="genre-filter">
+        <div class="container">
+            <h2><i class="fas fa-book"></i> Browse Manga</h2>
+            <div class="genre-buttons">
+                <button class="genre-btn active" onclick="filterByGenre('all')">All</button>
+                <button class="genre-btn" onclick="filterByGenre('Action')">Action</button>
+                <button class="genre-btn" onclick="filterByGenre('Romance')">Romance</button>
+                <button class="genre-btn" onclick="filterByGenre('Comedy')">Comedy</button>
+                <button class="genre-btn" onclick="filterByGenre('Fantasy')">Fantasy</button>
+                <button class="genre-btn" onclick="filterByGenre('Shounen')">Shounen</button>
+                <button class="genre-btn" onclick="filterByGenre('Seinen')">Seinen</button>
+                <button class="genre-btn" onclick="filterByGenre('Horror')">Horror</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manga Grid -->
+    <main class="main-content">
+        <div class="container">
+            <div class="card-grid" id="mangaGrid">
+                <!-- Manga Cards -->
+                <a href="read.html?id=1" class="content-card" data-genre="Shounen">
+                    <img src="https://cdn.myanimelist.net/images/manga/2/253146.jpg" alt="One Piece">
+                    <div class="card-info">
+                        <h3>One Piece</h3>
+                        <p>Adventure, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.2</div>
+                    </div>
+                </a>
+                <a href="read.html?id=2" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/manga/3/179883.jpg" alt="Chainsaw Man">
+                    <div class="card-info">
+                        <h3>Chainsaw Man</h3>
+                        <p>Action, Horror</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.8</div>
+                    </div>
+                </a>
+                <a href="read.html?id=3" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/manga/2/260977.jpg" alt="Solo Leveling">
+                    <div class="card-info">
+                        <h3>Solo Leveling</h3>
+                        <p>Action, Fantasy</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.6</div>
+                    </div>
+                </a>
+                <a href="read.html?id=4" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/manga/3/210341.jpg" alt="Jujutsu Kaisen">
+                    <div class="card-info">
+                        <h3>Jujutsu Kaisen</h3>
+                        <p>Action, Supernatural</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.8</div>
+                    </div>
+                </a>
+                <a href="read.html?id=5" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/manga/1/261755.jpg" alt="My Hero Academia">
+                    <div class="card-info">
+                        <h3>My Hero Academia</h3>
+                        <p>Action, Superhero</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.7</div>
+                    </div>
+                </a>
+                <a href="read.html?id=6" class="content-card" data-genre="Shounen">
+                    <img src="https://cdn.myanimelist.net/images/manga/2/258749.jpg" alt="Naruto">
+                    <div class="card-info">
+                        <h3>Naruto</h3>
+                        <p>Action, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.5</div>
+                    </div>
+                </a>
+                <a href="read.html?id=7" class="content-card" data-genre="Action">
+                    <img src="https://cdn.myanimelist.net/images/manga/1/259336.jpg" alt="Attack on Titan">
+                    <div class="card-info">
+                        <h3>Attack on Titan</h3>
+                        <p>Action, Dark Fantasy</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.0</div>
+                    </div>
+                </a>
+                <a href="read.html?id=8" class="content-card" data-genre="Shounen">
+                    <img src="https://cdn.myanimelist.net/images/manga/2/258876.jpg" alt="Dragon Ball">
+                    <div class="card-info">
+                        <h3>Dragon Ball</h3>
+                        <p>Action, Shounen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.6</div>
+                    </div>
+                </a>
+                <a href="read.html?id=9" class="content-card" data-genre="Seinen">
+                    <img src="https://cdn.myanimelist.net/images/manga/2/243669.jpg" alt="Berserk">
+                    <div class="card-info">
+                        <h3>Berserk</h3>
+                        <p>Action, Seinen</p>
+                        <div class="rating"><i class="fas fa-star"></i> 9.4</div>
+                    </div>
+                </a>
+                <a href="read.html?id=10" class="content-card" data-genre="Romance">
+                    <img src="https://cdn.myanimelist.net/images/manga/1/268224.jpg" alt="Kaguya-sama">
+                    <div class="card-info">
+                        <h3>Kaguya-sama: Love is War</h3>
+                        <p>Romance, Comedy</p>
+                        <div class="rating"><i class="fas fa-star"></i> 8.9</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SenpaiStreamingWorld. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        function filterByGenre(genre) {
+            const cards = document.querySelectorAll('.content-card');
+            const buttons = document.querySelectorAll('.genre-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            cards.forEach(card => {
+                if (genre === 'all' || card.dataset.genre === genre) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function searchManga() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.content-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') searchManga();
+        });
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
