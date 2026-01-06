@@ -49,6 +49,8 @@
                     <a href="profile.html?section=continue-watching"><i class="fas fa-play-circle"></i> Continue Watching</a>
                     <a href="profile.html?section=continue-reading"><i class="fas fa-book-open"></i> Continue Reading</a>
                     <hr>
+                    <a href="profile.html?section=settings"><i class="fas fa-cog"></i> Settings</a>
+                    <hr>
                     <a href="#" onclick="logout(); return false;" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>

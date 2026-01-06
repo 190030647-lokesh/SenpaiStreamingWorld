@@ -67,23 +67,23 @@
             </div>
 
             <div class="profile-menu">
-                <a href="profile.html?section=continue-watching" class="menu-item">
+                <a href="profile.html?section=continue-watching" class="menu-item" onclick="showSection('continue-watching'); return false;">
                     <i class="fas fa-play-circle"></i>
                     <span>Continue Watching</span>
                 </a>
-                <a href="profile.html?section=continue-reading" class="menu-item">
+                <a href="profile.html?section=continue-reading" class="menu-item" onclick="showSection('continue-reading'); return false;">
                     <i class="fas fa-book-open"></i>
                     <span>Continue Reading</span>
                 </a>
-                <a href="profile.html?section=completed-anime" class="menu-item">
+                <a href="profile.html?section=completed-anime" class="menu-item" onclick="showSection('completed-anime'); return false;">
                     <i class="fas fa-check-circle"></i>
                     <span>Completed Anime</span>
                 </a>
-                <a href="profile.html?section=completed-manga" class="menu-item">
+                <a href="profile.html?section=completed-manga" class="menu-item" onclick="showSection('completed-manga'); return false;">
                     <i class="fas fa-check-circle"></i>
                     <span>Completed Manga</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="profile.html?section=settings" class="menu-item" onclick="showSection('settings'); return false;">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
@@ -91,6 +91,60 @@
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settingsSection" class="section-content" style="display:none;">
+                <h2><i class="fas fa-cog"></i> Account Settings</h2>
+                <div class="settings-form">
+                    <form id="profileEditForm" onsubmit="saveProfile(event)">
+                        <div class="form-group">
+                            <label for="editUsername">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input type="text" id="editUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmail">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" id="editEmail" name="email" required disabled>
+                            <small>Email cannot be changed</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPassword">
+                                <i class="fas fa-lock"></i> New Password (leave blank to keep current)
+                            </label>
+                            <input type="password" id="editPassword" name="password" minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="editConfirmPassword">
+                                <i class="fas fa-lock"></i> Confirm New Password
+                            </label>
+                            <input type="password" id="editConfirmPassword" name="confirmPassword">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="showSection('')">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Continue Watching Section -->
+            <div id="watchingSection" class="section-content" style="display:none;">
+                <h2><i class="fas fa-play-circle"></i> Continue Watching</h2>
+                <p>Your watched anime will appear here.</p>
+            </div>
+
+            <!-- Continue Reading Section -->
+            <div id="readingSection" class="section-content" style="display:none;">
+                <h2><i class="fas fa-book-open"></i> Continue Reading</h2>
+                <p>Your manga reading progress will appear here.</p>
             </div>
         </div>
     </main>
@@ -114,34 +168,74 @@
                     document.getElementById('profileUsername').textContent = user.username;
                     document.getElementById('profileEmail').textContent = user.email;
                     document.getElementById('memberSince').textContent = 'Member since: 2026-01-05';
+                    
+                    // Pre-fill edit form
+                    document.getElementById('editUsername').value = user.username;
+                    document.getElementById('editEmail').value = user.email;
+                    
+                    // Check URL for section
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const section = urlParams.get('section');
+                    if (section) {
+                        showSection(section);
+                    }
                     return;
                 }
             }
             
-            // Try server
-            fetch('api/user/current')
-                .then(response => {
-                    if (!response.ok) {
-                        window.location.href = 'login.html';
-                        return;
-                    }
-                    return response.json();
-                })
-                .then(user => {
-                    if (user) {
-                        document.getElementById('profileUsername').textContent = user.username;
-                        document.getElementById('profileEmail').textContent = user.email;
-                        if (user.createdAt) {
-                            document.getElementById('memberSince').textContent = 'Member since: ' + user.createdAt.substring(0, 10);
-                        }
-                    }
-                })
-                .catch(() => {
-                    // Not logged in via server, check if demo user exists
-                    if (!demoUser) {
-                        window.location.href = 'login.html';
-                    }
-                });
+            // Not logged in
+            window.location.href = 'login.html';
+        }
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(el => el.style.display = 'none');
+            
+            // Show selected section
+            if (section === 'settings') {
+                document.getElementById('settingsSection').style.display = 'block';
+            } else if (section === 'continue-watching') {
+                document.getElementById('watchingSection').style.display = 'block';
+            } else if (section === 'continue-reading') {
+                document.getElementById('readingSection').style.display = 'block';
+            }
+        }
+        
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('editUsername').value;
+            const password = document.getElementById('editPassword').value;
+            const confirmPassword = document.getElementById('editConfirmPassword').value;
+            
+            // Validate passwords match if changing
+            if (password && password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Get current user
+            const demoUser = localStorage.getItem('demoUser');
+            if (demoUser) {
+                const user = JSON.parse(demoUser);
+                
+                // Update username
+                user.username = username;
+                
+                // Save back to localStorage
+                localStorage.setItem('demoUser', JSON.stringify(user));
+                
+                // Update UI
+                document.getElementById('profileUsername').textContent = username;
+                
+                // Show auth updated name
+                if (window.showLoggedInUser) {
+                    window.showLoggedInUser(username);
+                }
+                
+                alert('Profile updated successfully!');
+                showSection('');
+            }
         }
         
         checkProfileAuth();
