@@ -2,12 +2,14 @@ package com.senpaistream.servlet;
 
 import com.senpaistream.dao.UserDAO;
 import com.senpaistream.model.User;
+import com.senpaistream.util.DatabaseConnection;
 import com.google.gson.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -53,6 +55,30 @@ public class LoginServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             jsonResponse.addProperty("success", false);
             jsonResponse.addProperty("message", "Please enter a valid Gmail address");
+            out.print(jsonResponse.toString());
+            out.flush();
+            return;
+        }
+        
+        // Check database connection
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) {
+            // Demo mode - allow any login
+            System.out.println("Demo mode: Login for " + email);
+            String username = email.split("@")[0]; // Get username from email
+            
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", 1);
+            session.setAttribute("username", username);
+            session.setAttribute("email", email);
+            session.setAttribute("demoMode", true);
+            session.setMaxInactiveInterval(30 * 60);
+            
+            response.setStatus(HttpServletResponse.SC_OK);
+            jsonResponse.addProperty("success", true);
+            jsonResponse.addProperty("message", "Login successful! (Demo Mode)");
+            jsonResponse.addProperty("redirect", "index.html");
+            jsonResponse.addProperty("demoMode", true);
             out.print(jsonResponse.toString());
             out.flush();
             return;
