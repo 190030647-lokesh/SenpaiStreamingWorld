@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connection Test - SenpaiStreamingWorld</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eaeaea;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-content {
+            padding-left: 35px;
+        }
+        
+        .status-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-warning {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .badge-error {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #ff5252;
+        }
+        
+        .btn-secondary {
+            background: #16213e;
+        }
+        
+        .btn-secondary:hover {
+            background: #0f1824;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-database"></i> Database Connection Test</h1>
+        
+        <div class="status-card">
+            <div class="status-title">
+                <i class="fas fa-server"></i> Server Status
+            </div>
+            <div class="status-content" id="serverStatus">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Checking server connection...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <div class="status-title">
+                <i class="fas fa-user"></i> Current User Status
+            </div>
+            <div class="status-content" id="userStatus">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Checking user session...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> How to Fix 401 Errors:</h3>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li style="margin: 10px 0;">If you see "Demo Mode", the database is not connected. Contact admin to check Railway MySQL service.</li>
+                <li style="margin: 10px 0;">If you registered in demo mode, your credentials are NOT in the database. You need to register again when database is connected.</li>
+                <li style="margin: 10px 0;">Clear your browser's localStorage and register again with the database connected.</li>
+                <li style="margin: 10px 0;">After fixing, login with your credentials and they will be saved properly.</li>
+            </ol>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="testAgain()"><i class="fas fa-sync"></i> Test Again</button>
+            <button class="btn btn-secondary" onclick="clearStorage()"><i class="fas fa-trash"></i> Clear LocalStorage</button>
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> Go Home</button>
+        </div>
+    </div>
+    
+    <script>
+        async function checkStatus() {
+            // Check server/database status
+            try {
+                const response = await fetch('login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'email=test@gmail.com&password=test123'
+                });
+                
+                const text = await response.text();
+                const data = JSON.parse(text);
+                
+                let serverHTML = '';
+                if (data.demoMode === true) {
+                    serverHTML = `
+                        <div class="status-item">
+                            <span class="badge badge-warning">DEMO MODE</span>
+                            <span>Database not connected - using localStorage fallback</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                            <span>User registrations will NOT be saved to database</span>
+                        </div>
+                    `;
+                } else if (data.success === false && data.message.includes('Invalid')) {
+                    serverHTML = `
+                        <div class="status-item">
+                            <span class="badge badge-success">CONNECTED</span>
+                            <span>Database is properly connected and working!</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                            <span>User registrations will be saved to MySQL database</span>
+                        </div>
+                    `;
+                } else {
+                    serverHTML = `
+                        <div class="status-item">
+                            <span class="badge badge-warning">UNKNOWN</span>
+                            <span>Unable to determine database status</span>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('serverStatus').innerHTML = serverHTML;
+                
+            } catch (error) {
+                document.getElementById('serverStatus').innerHTML = `
+                    <div class="status-item">
+                        <span class="badge badge-error">ERROR</span>
+                        <span>Cannot connect to server</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                        <span>${error.message}</span>
+                    </div>
+                `;
+            }
+            
+            // Check current user status
+            const demoUser = localStorage.getItem('demoUser');
+            let userHTML = '';
+            
+            if (demoUser) {
+                try {
+                    const user = JSON.parse(demoUser);
+                    const isDemoMode = user.demoMode === true;
+                    
+                    userHTML = `
+                        <div class="status-item">
+                            <span class="badge ${isDemoMode ? 'badge-warning' : 'badge-success'}">${isDemoMode ? 'DEMO USER' : 'DATABASE USER'}</span>
+                            <span>Logged in as: <span class="code">${user.username}</span></span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email: <span class="code">${user.email}</span></span>
+                        </div>
+                        ${isDemoMode ? `
+                        <div class="status-item">
+                            <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                            <span>This account exists only in localStorage, not in database</span>
+                        </div>
+                        ` : ''}
+                    `;
+                } catch (e) {
+                    userHTML = `
+                        <div class="status-item">
+                            <span class="badge badge-error">ERROR</span>
+                            <span>Corrupted user data in localStorage</span>
+                        </div>
+                    `;
+                }
+            } else {
+                userHTML = `
+                    <div class="status-item">
+                        <span class="badge badge-warning">NOT LOGGED IN</span>
+                        <span>No user session found</span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('userStatus').innerHTML = userHTML;
+        }
+        
+        function testAgain() {
+            document.getElementById('serverStatus').innerHTML = '<div class="loading"><div class="spinner"></div><p>Checking...</p></div>';
+            document.getElementById('userStatus').innerHTML = '<div class="loading"><div class="spinner"></div><p>Checking...</p></div>';
+            checkStatus();
+        }
+        
+        function clearStorage() {
+            if (confirm('This will clear all saved user data from your browser. Continue?')) {
+                localStorage.clear();
+                alert('LocalStorage cleared! You can now register again.');
+                testAgain();
+            }
+        }
+        
+        // Run on load
+        checkStatus();
+    </script>
+</body>
+</html>
