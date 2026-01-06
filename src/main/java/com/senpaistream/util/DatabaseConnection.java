@@ -6,13 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseConnection {
-    // Use environment variables for Railway, fallback to localhost for development
-    private static final String HOST = getEnvOrDefault("MYSQL_HOST", "localhost");
-    private static final String PORT = getEnvOrDefault("MYSQL_PORT", "3306");
-    private static final String DATABASE = getEnvOrDefault("MYSQL_DATABASE", "senpai_streaming_world");
-    private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true";
-    private static final String USER = getEnvOrDefault("MYSQL_USER", "root");
-    private static final String PASSWORD = getEnvOrDefault("MYSQL_PASSWORD", "Tiger@123");
     
     private static boolean tablesCreated = false;
     private static boolean driverLoaded = false;
@@ -20,6 +13,29 @@ public class DatabaseConnection {
     private static String getEnvOrDefault(String key, String defaultValue) {
         String value = System.getenv(key);
         return (value != null && !value.isEmpty()) ? value : defaultValue;
+    }
+    
+    private static String buildConnectionUrl() {
+        // First check for MYSQL_URL (complete URL from Railway)
+        String mysqlUrl = System.getenv("MYSQL_URL");
+        if (mysqlUrl != null && !mysqlUrl.isEmpty()) {
+            // Convert mysql:// to jdbc:mysql://
+            if (mysqlUrl.startsWith("mysql://")) {
+                mysqlUrl = "jdbc:" + mysqlUrl;
+            }
+            System.out.println("Using MYSQL_URL");
+            return mysqlUrl + "?allowPublicKeyRetrieval=true&useSSL=false";
+        }
+        
+        // Fallback to individual variables
+        String host = getEnvOrDefault("MYSQL_HOST", "localhost");
+        String port = getEnvOrDefault("MYSQL_PORT", "3306");
+        String database = getEnvOrDefault("MYSQL_DATABASE", "senpai_streaming_world");
+        
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + 
+                     "?allowPublicKeyRetrieval=true&useSSL=false";
+        System.out.println("Built URL: " + host + ":" + port + "/" + database);
+        return url;
     }
     
     public static Connection getConnection() {
@@ -31,12 +47,16 @@ public class DatabaseConnection {
                 System.out.println("MySQL Driver loaded.");
             }
             
-            System.out.println("Connecting to: " + HOST + ":" + PORT + "/" + DATABASE);
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            String url = buildConnectionUrl();
+            String user = getEnvOrDefault("MYSQL_USER", "root");
+            String password = getEnvOrDefault("MYSQL_PASSWORD", "Tiger@123");
+            
+            System.out.println("Attempting database connection...");
+            connection = DriverManager.getConnection(url, user, password);
             System.out.println("Database connected successfully!");
             
             // Auto-create tables on first connection
-            if (!tablesCreated) {
+            if (!tablesCreated && connection != null) {
                 createTables(connection);
                 tablesCreated = true;
             }
@@ -46,7 +66,7 @@ public class DatabaseConnection {
             e.printStackTrace();
         } catch (SQLException e) {
             System.err.println("Connection to database failed: " + e.getMessage());
-            System.err.println("Host: " + HOST + ", Port: " + PORT + ", DB: " + DATABASE + ", User: " + USER);
+            e.printStackTrace();
         }
         return connection;
     }
@@ -68,6 +88,7 @@ public class DatabaseConnection {
             System.out.println("Users table created or already exists.");
         } catch (SQLException e) {
             System.err.println("Error creating tables: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
