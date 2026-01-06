@@ -72,20 +72,29 @@ public class DatabaseConnection {
     }
     
     private static void createTables(Connection conn) {
-        String createUsersTable = 
-            "CREATE TABLE IF NOT EXISTS users (" +
-            "user_id INT AUTO_INCREMENT PRIMARY KEY, " +
-            "username VARCHAR(50) NOT NULL UNIQUE, " +
-            "email VARCHAR(100) NOT NULL UNIQUE, " +
-            "password VARCHAR(255) NOT NULL, " +
-            "profile_picture VARCHAR(255) DEFAULT 'default.png', " +
-            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-            "last_login TIMESTAMP NULL" +
-            ")";
-        
         try (Statement stmt = conn.createStatement()) {
+            // Drop existing table to recreate with proper structure
+            try {
+                stmt.execute("DROP TABLE IF EXISTS users");
+                System.out.println("Dropped existing users table.");
+            } catch (SQLException e) {
+                System.err.println("Could not drop table: " + e.getMessage());
+            }
+            
+            // Create table with proper AUTO_INCREMENT
+            String createUsersTable = 
+                "CREATE TABLE users (" +
+                "user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                "username VARCHAR(50) NOT NULL UNIQUE, " +
+                "email VARCHAR(100) NOT NULL UNIQUE, " +
+                "password VARCHAR(255) NOT NULL, " +
+                "profile_picture VARCHAR(255) DEFAULT 'default.png', " +
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                "last_login TIMESTAMP NULL" +
+                ")";
+            
             stmt.execute(createUsersTable);
-            System.out.println("Users table created or already exists.");
+            System.out.println("Users table created successfully with AUTO_INCREMENT!");
         } catch (SQLException e) {
             System.err.println("Error creating tables: " + e.getMessage());
             e.printStackTrace();
